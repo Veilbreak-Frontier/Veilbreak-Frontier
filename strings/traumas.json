@@ -1,0 +1,174 @@
+{
+	"brain_damage": [
+		"We straight gassing, cutting straight to the bricks, haha. This shit ain't nothing to me, man.",
+		"I had to do it to them, snipe.",
+		"I'm not loyal to anybody; I'm a demon. I have no loyalty for anyone, never did, never will.",
+		"Shorty chose to be with a demon. Sounds like her problem to me, haha.",
+		"On and off the court, straight fundamentals, no funny business.",
+		"Moving like Dracula, we get it back in blood.",
+		"You see it, I really did this, I'm really him.",
+		"Flipped a whole brick into an empire, stop playing with me.",
+		"I have no sympathy, I live for this shit. I'm nice with it, haha.",
+		"My money long, my pockets deep.",
+		"We straight gassing, cutting straight to the bricks.",
+		"Smoking fentanyl-laced cereal milk; I see God.",
+		"I hope them aliens are real, so that I have more things to fuck.",
+		"I just popped a whole garbanzo bean, fuck you mean?",
+		"Y'all can't fuck with me.",
+		"I'm him, I been him, I will continue to be him.",
+		"Gulping sea monkeys by the gallon; my tummy feel crazy.",
+		"They thought they could stop a demon. I'm back.",
+		"This shit ain't nothing to me, man.",
+		"You can't trust me, I don't even trust myself.",
+		"I don't even know who I am anymore, I'm getting too much money.",
+		"Can you remind me who I am?",
+		"Get the president on the phone now! I fronted him a brick, I need my money!",
+		"I'm moving different.",
+		"They must have amnesia, they forgot that I'm him.",
+		"We smoking shit in a glass pipe, blowing the Lord's bubbles.",
+		"I don't give a fuck if I go blind. I don't need to see the price tag anyways.",
+		"We're smoking filtered crack, you stupid piece of shit. I'll fucking kill you.",
+		"Last guy who ran off on the pack got choked out by some insulated gloves. The last thing he ever saw was the price tag on them.",
+		"Slowly faded into darkness and I let the archangels take him.",
+		"Reach for my neck, you'll get turned into an example.",
+		"Y'all gotta stop playing with me, man.",
+		"Tied the nuke ops to the back of a janicart and dragged 'em around the station for 24 hours.",
+		"Top shelf zaza disrupted my circadian rhythm.",
+		"This shit ain't nothing to me, you stupid piece of shit. Step the wrong way and you will perish.",
+		"You think I care about this shit? Ask me if I care about this shit, cause I don't give a shit.",
+		"If I had a dollar for every time they said I gave a shit, I'd be broke cause I don't give a shit.",
+		"I balled so hard they thought I was a fucking nutsack.",
+		"I'm at the bank about to withdraw all of it.",
+		"Caught a broke boy trying to come up on my cargo package, so I skinned his ass alive.",
+		"Thеy needed a stealth soldier, so I put my hands on the hot plate at the kitchen and burned my fucking fingerprints off. They will not find me.",
+		"Blacked out on the Percocet, ordered a Desert Eagle off Cargo.",
+		"Got supermatter crystalline shards poking out my lungs, fuckboy.",
+		"The Moonstation Armory cannon shivered his timbers.",
+		"I'm Dracula; I'm twelve million years old.",
+		"These officers are interrogating me about an ounce of weed, as if I didn't kill a bartender two z-levels away.",
+		"If this watch breaks, the foreign exchange market will take a twenty-eight percent hit. People will die.",
+		"My diamonds come from the most horrific situations possible.",
+		"They're sick in the head; they forgot I'm him.",
+		"I got my DNA test back; turns out I'm one-hundred percent him.",
+		"There are consequences to your crimes against Dracula.",
+		"I have more Percs than there are stars in the Leo Cluster.",
+		"I'm claiming every corner, every block. Fuck it; I'm coming for every universal enzyme.",
+		"All I'm saying is I paid for the tickets.",
+		"I'm moving lucrative.",
+		"War is all I think about.",
+		"I'm doing a lot of drugs, a lot!",
+		"I sold crack to myself.",
+		"I'm getting too much money!",
+		"Broke boy wasn't balling enough.",
+		"I got more sticks than a fucking forest.",
+		"I have the blueprint to the catacombs.",
+		"Smoked a nuke op; his meat came right off the bone.",
+		"I don't have any compassion for broke boys.",
+		"I knew the perc was fake, but I still ate it because I'm a gremlin.",
+		"I took two limitless pills to limit myself.",
+		"I got so much cheese in my pocket, they thought I was a fucking calzone.",
+		"I'll give you that fluoride stare.",
+		"Drank man, please! I'm thirsty! Drank man, please!"
+	],
+
+	"mutations": [
+		"eksrey",
+		"eppilapse",
+		"fungal tb",
+		"glowey skin",
+		"halk",
+		"kamelien",
+		"stun gloves",
+		"telikesis"
+	],
+
+	"george": ["gdoruge", "george", "gorge", "joerge"],
+
+	"mellens": ["mellens", "melons", "mwrlins"],
+	"random_gibberish": ["g", "squid", "r", "carbon dioxide"],
+
+	"y_replacements": ["y", "i", "e"],
+
+	"servers": [
+		"bager",
+		"berry",
+		"colonel hall",
+		"mr basil",
+		"mr terry",
+		"mrs sybil",
+		"sybl",
+		"vent hell",
+		"manual",
+		"camel"
+	],
+
+	"create_verbs": ["creat", "gib", "MAke me", "spawn", "tc trade me"],
+
+	"create_nouns": [
+		"abdoocters",
+		"anteg",
+		"ayleins",
+		"bleb",
+		"cock cult",
+		"deth squads",
+		"deval",
+		"revinent",
+		"sheadow lings",
+		"treaitors",
+		"zenomorfs"
+	],
+
+	"bug": ["", "BUG!!!", "IS TIS A BUG??", "SI IST A BUGG/"],
+
+	"semicolon": ["", ";", ".h"],
+
+	"god_foe": [
+		"BLASPHEMERS",
+		"PARASITES",
+		"PEASANTS",
+		"UNBELIEVERS",
+		"WEAKLINGS",
+		"HERETICS",
+		"INSECTS",
+		"MORTALS"
+	],
+
+	"god_aggressive": [
+		"ALL WILL FALL BEFORE ME!",
+		"BURN, @pick(god_foe)!",
+		"DEATH TO @pick(god_foe)!",
+		"ENDLESS SUFFERING AWAITS YOU, @pick(god_foe).",
+		"BEGONE, @pick(god_foe)!",
+		"BLEED, @pick(god_foe)!",
+		"DIE, @pick(god_foe)!"
+	],
+
+	"god_neutral": [
+		"BE HEALED, MORTALS. I AM FEELING MERCIFUL.",
+		"BEGONE, MORTALS.",
+		"DANCE FOR ME, LITTLE MORTALS.",
+		"HALT.",
+		"HONK...",
+		"MORTALS, SAY YOUR NAME",
+		"REST, MORTALS, TOMORROW IS A LONG DAY.",
+		"SEE THE TRUTH BEFORE YOU, MORTALS.",
+		"YOU MORTALS MAKE ME SICK.",
+		"YOU. STOP.",
+		"BE SILENT.",
+		"QUIET",
+		"STOP"
+	],
+
+	"god_unstun": [
+		"GET UP, PRIEST.",
+		"GET UP. I HAVE NO TIME TO LOSE.",
+		"GET UP."
+	],
+
+	"god_heal": [
+		"BE HEALED, PRIEST.",
+		"YOU SHALL SURVIVE THIS, MY PRIEST.",
+		"YOU WILL LIVE TO SEE ANOTHER DAY.",
+		"YOUR LIFE IS IMPORTANT. KEEP IT."
+	]
+}

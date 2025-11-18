@@ -1,0 +1,18 @@
+2025-06-01:
+  WinterDarkraven:
+  - balance: Bimbos no longer suffer lethal oxygen damage, instead they need to catch
+      their breath.
+2025-06-03:
+  WinterDarkraven:
+  - rscadd: Adds Bimbo Vulnerability. Bimbos now take stamina damage when penetrated,
+      resulting in them being pinned to the floor. Bimbos can now form complex sentences
+      for a better roleplay experience and will no longer emote spam (because it annoys
+      people).
+2025-06-04:
+  Goku:
+  - bugfix: Self Actualization Device will now correctly restore your preferences/character's
+      external organs such as genitals, mutant bodyparts/external organs and markings.
+2025-06-13:
+  Gboster-0:
+  - bugfix: The legion megafauna now drops non-dense necropolis chests until you touch
+      them, to avoid the legion breaking them

@@ -1,0 +1,18 @@
+2025-03-16:
+  Goku:
+  - rscadd: New duct spider mob type, the Aggressive Duct Spider. They're slightly
+      stronger than their passive version, and now spawn in maintenance spider nests
+      instead of giant spiders.
+2025-03-18:
+  Goku:
+  - rscadd: Added new item coloring in loadout.
+  - rscadd: New spans for subtler.
+  - rscadd: Re-added some missing quirks to the quirk selection.
+2025-03-19:
+  Goku:
+  - rscadd: Dormitories have been shielded with a neutralizing field, bioscrambler
+      anomalies will no longer track nor have any effect on people in dormitories.
+2025-03-25:
+  Goku:
+  - balance: Radioactive Nebula radiation storm will now not hit maintenance and dorms/lockers rooms.
+  - balance: Normal radiation storm will now not hit dorms/lockers rooms.
