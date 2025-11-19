@@ -21,7 +21,7 @@
 
 # Roundend embeds
 ## Overrides the roundend messages with a custom embed system
-#ROUNDEND_EMBEDS
+##ROUNDEND_EMBEDS
 
 # Roundend embed color
 ## Color that'll be displayed in the embed's message

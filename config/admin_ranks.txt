@@ -56,7 +56,7 @@ Exclude =
 Edit =
 
 Name = Game Admin
-Include = @ STEALTH SOUND DEBUG
+Include = @ STEALTH SOUND DEBUG ADMIN
 Exclude =
 Edit =
 
