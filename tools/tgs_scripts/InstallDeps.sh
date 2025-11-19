@@ -45,8 +45,8 @@ fi
 # which we assume was used to install it
 if ! [ -x "$has_ytdlp" ]; then
 	echo "Installing yt-dlp with pip3..."
-	pip3 install yt-dlp --break-system-packages
+	pip3 install yt-dlp
 else
 	echo "Ensuring yt-dlp is up-to-date with pip3..."
-	pip3 install yt-dlp -U --break-system-packages
+	pip3 install yt-dlp -U
 fi
