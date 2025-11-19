@@ -1,4 +1,5 @@
 #define RESTART_COUNTER_PATH "data/round_counter.txt"
+#define INITIAL_BOOT_PATH "data/initial_boot.tmp"
 /// Load byond-tracy. If USE_BYOND_TRACY is defined, then this is ignored and byond-tracy is always loaded.
 #define USE_TRACY_PARAMETER "tracy"
 /// Force the log directory to be something specific in the data/logs folder
@@ -7,7 +8,6 @@
 #define NO_INIT_PARAMETER "no-init"
 
 GLOBAL_VAR(restart_counter)
-GLOBAL_VAR_INIT(initial_startup_complete, FALSE)
 
 /**
  * WORLD INITIALIZATION
@@ -160,10 +160,11 @@ GLOBAL_VAR_INIT(initial_startup_complete, FALSE)
 	// (i.e. basically nothing should be added before load_admins() in here)
 
 	// Try to set round ID
-	if(GLOB.initial_startup_complete)
+	if(fexists(INITIAL_BOOT_PATH))
+		fdel(INITIAL_BOOT_PATH)
 		SSdbcore.InitializeRound()
-	else
-		GLOB.initial_startup_complete = TRUE
+
+	text2file("1", INITIAL_BOOT_PATH)
 
 	SetupLogs()
 
@@ -364,6 +365,7 @@ GLOBAL_VAR_INIT(initial_startup_complete, FALSE)
 	log_world("World rebooted at [time_stamp()]")
 
 	shutdown_logging() // Past this point, no logging procs can be used, at risk of data loss.
+	fdel(INITIAL_BOOT_PATH)
 	QDEL_NULL(Tracy)
 	QDEL_NULL(Debugger)
 
