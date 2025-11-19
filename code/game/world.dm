@@ -7,6 +7,7 @@
 #define NO_INIT_PARAMETER "no-init"
 
 GLOBAL_VAR(restart_counter)
+GLOBAL_VAR_INIT(initial_startup_complete, FALSE)
 
 /**
  * WORLD INITIALIZATION
@@ -159,7 +160,10 @@ GLOBAL_VAR(restart_counter)
 	// (i.e. basically nothing should be added before load_admins() in here)
 
 	// Try to set round ID
-	SSdbcore.InitializeRound()
+	if(GLOB.initial_startup_complete)
+		SSdbcore.InitializeRound()
+	else
+		GLOB.initial_startup_complete = TRUE
 
 	SetupLogs()
 
