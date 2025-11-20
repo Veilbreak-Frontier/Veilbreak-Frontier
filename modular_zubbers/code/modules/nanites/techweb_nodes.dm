@@ -119,6 +119,8 @@
 		"defib_nanites",
 		"fakedeath_nanites",
 		"purging_plus_nanites",
+		"e_regen_nanites",
+		"f_regen_nanites",
 		// "regenerative_plus_nanites",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS, TECHWEB_POINT_TYPE_NANITE = TECHWEB_TIER_2_POINTS)
@@ -159,6 +161,7 @@
 		"kickstart_nanites",
 		"offline_nanites",
 		"pyramid_nanites",
+		"quantum_nanites",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_5_POINTS, TECHWEB_POINT_TYPE_NANITE = TECHWEB_TIER_3_POINTS)
 	hidden = TRUE
