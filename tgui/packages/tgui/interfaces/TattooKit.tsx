@@ -69,9 +69,10 @@ type Data = {
 const getFontFamily = (fontKey: string): string => {
   const fontMap: Record<string, string> = {
     PEN_FONT: "'Courier New', Courier, monospace",
-    IMPRINT_FONT: "'Times New Roman', Times, serif",
-    SYNDICATE_FONT: "'Arial Black', Gadget, sans-serif",
-    BUBBLEGUM_FONT: "'Comic Sans MS', cursive, sans-serif",
+    FOUNTAIN_PEN_FONT: "'Brush Script MT', cursive",
+    PRINTER_FONT: "'Lucida Console', Monaco, monospace",
+    CHARCOAL_FONT: "'Impact', Charcoal, sans-serif",
+    CRAYON_FONT: "'Comic Sans MS', cursive, sans-serif",
   };
   return fontMap[fontKey] || 'Arial, sans-serif';
 };
@@ -79,10 +80,16 @@ const getFontFamily = (fontKey: string): string => {
 // Helper to map flair keys to CSS styles for the preview
 const getFlairStyle = (flairKey: string): CSSProperties => {
   const flairMap: Record<string, CSSProperties> = {
-    FLAIR_SHADOW: { textShadow: '2px 2px 2px #333' },
-    FLAIR_GLOW: { textShadow: '0 0 5px #fff, 0 0 10px #fff, 0 0 15px #0073e6' },
-    FLAIR_ITALIC: { fontStyle: 'italic' },
-    FLAIR_BOLD: { fontWeight: 'bold' },
+    'flair_1': { textShadow: '0 0 3px #ff69b4' }, // Pink Flair
+    'flair_2': { textShadow: '0 0 3px #ff1493' }, // Love Flair
+    'flair_3': { textShadow: '0 0 3px #a52a2a' }, // Brown Flair
+    'flair_4': { textShadow: '0 0 3px #00ffff' }, // Cyan Flair
+    'flair_5': { textShadow: '0 0 3px #ffa500' }, // Orange Flair
+    'flair_6': { textShadow: '0 0 3px #ffff00' }, // Yellow Flair
+    'flair_7': { opacity: 0.7 }, // Subtle Flair
+    'flair_8': { fontWeight: 'bold', fontStyle: 'italic' }, // Velvet Flair
+    'flair_9': { fontWeight: 'bold', textDecoration: 'underline' }, // Velvet Notice
+    'flair_10': { letterSpacing: '2px' }, // Glossy Flair
   };
   return flairMap[flairKey] || {};
 };
@@ -270,12 +277,14 @@ const DesignStudio = (props) => {
                     <Section title="Live Preview" fill textAlign="center">
                       <Box
                         style={{
+                          ...getFlairStyle(selected_flair),
+                          ...getLayerStyle(selected_layer),
                           border: '2px solid #666',
                           borderRadius: '4px',
                           padding: '1rem',
                           minHeight: '100px',
                           color: ink_color,
-                          fontFamily: 'Arial, sans-serif',
+                          fontFamily: getFontFamily(selected_font),
                           fontSize: '14px',
                           backgroundColor: 'rgba(0,0,0,0.05)',
                           wordBreak: 'break-word',

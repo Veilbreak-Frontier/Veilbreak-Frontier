@@ -58,7 +58,7 @@
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "TattooKit")
-		ui.set_autoupdate(FALSE)
+		ui.set_autoupdate(TRUE)
 		ui.open()
 
 /obj/item/custom_tattoo_kit/ui_data(mob/user)
@@ -88,9 +88,9 @@
 		data["debug_mode"] = ui_data.debug_mode
 
 	// Options
-	data["font_options"] = ui_data.font_options
-	data["flair_options"] = ui_data.flair_options
-	data["layer_options"] = ui_data.layer_options
+	data["font_options"] = /datum/custom_tattoo_ui_data/font_options
+	data["flair_options"] = /datum/custom_tattoo_ui_data/flair_options
+	data["layer_options"] = /datum/custom_tattoo_ui_data/layer_options
 
 	// Body parts - ensure proper structure
 	data["body_parts"] = list()
