@@ -537,11 +537,6 @@
 "aAm" = (
 /turf/closed/wall/mineral/plastitanium,
 /area/station/hallway/primary/central)
-"aAt" = (
-/obj/machinery/bluespace_vendor/directional/west,
-/obj/structure/disposalpipe/segment,
-/turf/open/floor/iron/dark,
-/area/station/hallway/primary/central)
 "aBl" = (
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2,
 /turf/open/floor/carpet/blue,
@@ -4110,15 +4105,6 @@
 /obj/structure/cable,
 /turf/open/floor/iron/dark,
 /area/station/science/lab)
-"dAC" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2{
-	dir = 8
-	},
-/obj/structure/cable,
-/obj/machinery/bluespace_vendor/directional/west,
-/turf/open/floor/iron/dark,
-/area/station/hallway/primary/central)
 "dAF" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 1
@@ -6045,12 +6031,6 @@
 /obj/structure/extinguisher_cabinet/directional/west,
 /turf/open/floor/carpet/black,
 /area/station/security/detectives_office)
-"flL" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2{
-	dir = 8
-	},
-/turf/open/floor/iron/white,
-/area/station/medical/virology)
 "fmd" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/green/visible{
 	dir = 4
@@ -7664,10 +7644,6 @@
 /obj/structure/closet/secure_closet/security/cargo,
 /turf/open/floor/iron/dark,
 /area/station/security/brig)
-"gOz" = (
-/obj/machinery/bluespace_vendor/directional/north,
-/turf/open/floor/iron/dark,
-/area/station/hallway/primary/central)
 "gOB" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2{
@@ -13787,15 +13763,6 @@
 /obj/structure/cable,
 /turf/open/floor/iron/dark,
 /area/station/command/heads_quarters/hos)
-"msi" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2{
-	dir = 8
-	},
-/obj/structure/cable,
-/obj/machinery/bluespace_vendor/directional/north,
-/turf/open/floor/iron/dark,
-/area/station/hallway/primary/central)
 "mss" = (
 /obj/item/food/cornchips/random{
 	pixel_y = 7
@@ -14333,7 +14300,6 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/light/floor,
-/obj/machinery/bluespace_vendor/directional/north,
 /turf/open/floor/iron/dark,
 /area/station/hallway/primary/central)
 "mOe" = (
@@ -17156,10 +17122,6 @@
 /obj/effect/mapping_helpers/airlock/red_alert_access,
 /turf/open/floor/iron/white,
 /area/station/medical/storage)
-"pjK" = (
-/obj/machinery/bluespace_vendor/directional/north,
-/turf/closed/wall/mineral/plastitanium,
-/area/station/hallway/primary/central)
 "pjP" = (
 /obj/machinery/door/airlock/vault{
 	name = "Vault"
@@ -23991,6 +23953,13 @@
 /obj/item/reagent_containers/medigel/sterilizine{
 	pixel_x = 7;
 	pixel_y = 5
+	},
+/obj/item/custom_tattoo_kit,
+/obj/item/custom_tattoo_kit{
+	pixel_x = 4
+	},
+/obj/item/custom_tattoo_kit{
+	pixel_x = -4
 	},
 /turf/open/floor/iron/white,
 /area/station/service/barber)
@@ -58618,7 +58587,7 @@ vwX
 wYA
 wYA
 wYA
-dAC
+wYA
 iJB
 ctz
 wYA
@@ -59329,7 +59298,7 @@ irj
 obN
 kLm
 aAm
-msi
+wYA
 wYA
 eLV
 gYS
@@ -60390,7 +60359,7 @@ mwW
 prE
 fDx
 iCz
-gOz
+vwX
 ctz
 wYA
 wYA
@@ -61624,7 +61593,7 @@ enq
 jDq
 fMK
 jDq
-msi
+wYA
 lrB
 vwX
 rXW
@@ -61641,7 +61610,7 @@ mFe
 tdG
 rtN
 pgJ
-pjK
+aAm
 fer
 fer
 gOD
@@ -61714,7 +61683,7 @@ tfZ
 ecM
 urI
 tfZ
-aAt
+tfZ
 atW
 tfZ
 tfZ
@@ -62455,7 +62424,7 @@ odx
 vwX
 vwX
 aAm
-gOz
+vwX
 vwX
 vwX
 vwX
@@ -70901,9 +70870,9 @@ eQm
 nNl
 nNl
 myR
-flL
-dXz
-dXz
+myR
+myR
+myR
 dXz
 eyh
 stL
