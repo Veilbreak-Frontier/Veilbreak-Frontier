@@ -126,8 +126,8 @@
 	icon_dead = "void_bug_dead"
 	maxHealth = 200 // Much tankier
 	health = 200
-	melee_damage_lower = 4
-	melee_damage_upper = 7
+	melee_damage_lower = 2
+	melee_damage_upper = 5
 	speed = 1.3 // Slower but tougher
 	attack_verb_continuous = "crushes"
 	attack_verb_simple = "crush"

@@ -10546,6 +10546,7 @@
 #include "modular_zzveilbreak\code\modules\dungeons\portal_machinery_core.dm"
 #include "modular_zzveilbreak\code\modules\dungeons\portal_machinery_interaction.dm"
 #include "modular_zzveilbreak\code\modules\dungeons\portal_machinery_processing.dm"
+#include "modular_zzveilbreak\code\modules\nanites\programs.dm"
 #include "modular_zzveilbreak\code\modules\tattoo\tattoo_defines.dm"
 #include "modular_zzveilbreak\code\modules\GAGS\greyscale_configs.dm"
 #include "modular_zzveilbreak\code\modules\tattoo\tattoo_bodyparts.dm"
