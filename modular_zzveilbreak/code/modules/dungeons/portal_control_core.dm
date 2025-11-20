@@ -6,6 +6,7 @@
 	icon_screen = "gateway"
 	icon_keyboard = "teleport_key"
 	circuit = /obj/item/circuitboard/computer/portal_control
+	density = TRUE
 
 	var/obj/machinery/portal/linked_portal
 	var/generation_in_progress = FALSE

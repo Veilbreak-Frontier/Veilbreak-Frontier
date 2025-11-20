@@ -9,5 +9,5 @@
     <h1>Welcome to Veilbreak Frontier!</h1>
 
     <i>A relaxed MRP ERP server with standards. We are also working on our own PvE content to have our players enjoy their time and have glorious stories to tell.
-    Github link: <a href="https://github.com/lilfenfen/Veilbreak-Frontier/tree/master">https://github.com/lilfenfen/Veilbreak-Frontier/tree/master</a></i>
+    Github link: <a href="https://github.com/Veilbreak-Frontier/Veilbreak-Frontier/tree/master">https://github.com/Veilbreak-Frontier/Veilbreak-Frontier/tree/master</a></i>
 </div>
