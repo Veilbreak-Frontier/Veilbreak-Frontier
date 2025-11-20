@@ -109,10 +109,6 @@ export const IconCutterTarget = new Juke.Target({
       `modular_zubbers/icons/**/*.png.toml`,
       `modular_zubbers/icons/**/*.dmi.toml`,
       // BUBBER EDIT END
-      // VEILBREAK EDIT ADDITION START: Modular iconcutter
-      `modular_zzveilbreak/icons/**/*.png.toml`,
-      `modular_zzveilbreak/icons/**/*.dmi.toml`,
-      // VEILBREAK EDIT END
       cutter_path,
     ];
     // Alright we're gonna search out any existing toml files and convert
@@ -124,10 +120,6 @@ export const IconCutterTarget = new Juke.Target({
       ...Juke.glob(`modular_zubbers/icons/**/*.png.toml`),
       ...Juke.glob(`modular_zubbers/icons/**/*.dmi.toml`),
       // BUBBER EDIT END
-      // VEILBREAK EDIT ADDITION START: Modular iconcutter
-      ...Juke.glob(`modular_zzveilbreak/icons/**/*.png.toml`),
-      ...Juke.glob(`modular_zzveilbreak/icons/**/*.dmi.toml`),
-      // VEILBREAK EDIT END
     ];
     return [
       ...standard_inputs,
@@ -143,10 +135,6 @@ export const IconCutterTarget = new Juke.Target({
       ...Juke.glob(`modular_zubbers/icons/**/*.png.toml`),
       ...Juke.glob(`modular_zubbers/icons/**/*.dmi.toml`),
       // BUBBER EDIT END
-      // VEILBREAK EDIT ADDITION START: Modular iconcutter
-      ...Juke.glob(`modular_zzveilbreak/icons/**/*.png.toml`),
-      ...Juke.glob(`modular_zzveilbreak/icons/**/*.dmi.toml`),
-      // VEILBREAK EDIT END
     ];
     return folders
       .map((file) => file.replace(`.png.toml`, '.dmi'))
@@ -167,14 +155,6 @@ export const IconCutterTarget = new Juke.Target({
       'modular_zubbers/icons',
     ]);
     // BUBBER EDIT END
-    // VEILBREAK EDIT ADDITION START: Modular iconcutter
-    await Juke.exec(cutter_path, [
-      '--dont-wait',
-      '--templates',
-      'cutter_templates',
-      'modular_zzveilbreak/icons',
-    ]);
-    // VEILBREAK EDIT END
   },
 });
 
@@ -219,7 +199,6 @@ export const DmTarget = new Juke.Target({
     'modular_skyrat/**', ///SKYRAT EDIT ADDITION - Making the CBT work
     'modular_zubbers/**', ///BUBBER EDIT ADDITION - Making the CBT work
     'modular_zzplurt/**', ///SPLURT EDIT ADDITION - Making the CBT work
-    'modular_zzveilbreak/**', ///VEILBREAK EDIT ADDITION - Making the CBT work
     'sound/**',
     'tgui/public/tgui.html',
     `${DME_NAME}.dme`,
