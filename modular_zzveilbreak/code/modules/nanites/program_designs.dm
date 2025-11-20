@@ -5,7 +5,7 @@
 	desc = "A nanite program that takes advantage of the void to replicate faster."
 	id = "quantum_nanites"
 	program_type = /datum/nanite_program/protocol/quantum
-	category = list("Protocol Nanites")
+	category = list("Protocols Nanites")
 
 
 /datum/design/nanites/e_regen

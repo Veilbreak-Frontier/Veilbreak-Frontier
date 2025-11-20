@@ -20,9 +20,7 @@
 	name = "Efficient Regenation"
 	desc = "Programs the nanites to regen slowly but very efficiently compared to other regens."
 	use_rate = 0.2
-	healing_rate = 0.4
-	rogue_types = list(/datum/nanite_program/necrotic)
-	always_active = TRUE
+	always_active = FALSE
 
 /datum/nanite_program/regenerative/f_regen
 	name = "Fast Regeneration"
@@ -30,4 +28,4 @@
 	use_rate = 8
 	healing_rate = 10
 	rogue_types = list(/datum/nanite_program/necrotic)
-	always_active = TRUE
+	always_active = FALSE
