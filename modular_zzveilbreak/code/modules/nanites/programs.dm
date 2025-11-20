@@ -7,8 +7,10 @@
 	var/boost = 3.7
 
 /datum/nanite_program/protocol/quantum/on_process(datum/nanite_holder/holder)
-	if(istype(get_turf(holder.host), /turf/open/floor/void_tile))
+	if(holder.host.loc == /turf/open/floor/void_tile)
 		nanites.adjust_nanites(null, boost)
+	else
+		return
 
 /datum/nanite_program/regenerative/e_regen
 	name = "Efficient Regeneration"
