@@ -17,15 +17,18 @@
 		nanites.adjust_nanites(null, 3.6)
 
 /datum/nanite_program/regenerative/e_regen
-	name = "Efficient Regenation"
-	desc = "Programs the nanites to regen slowly but very efficiently compared to other regens."
+	name = "Efficient Regeneration"
+	desc = "Programs the nanites to regen slowly but very efficiently compared to other regenerations."
 	use_rate = 0.2
 	always_active = FALSE
+	healing_rate = 0.4
+	rogue_types = list(/datum/nanite_program/necrotic)
+
 
 /datum/nanite_program/regenerative/f_regen
 	name = "Fast Regeneration"
 	desc = "Programs the nanites to regenerate the host's wounds at a fast pace, but at the cost of efficiency."
-	use_rate = 8
-	healing_rate = 10
+	use_rate = 6
+	healing_rate = 7
 	rogue_types = list(/datum/nanite_program/necrotic)
 	always_active = FALSE
