@@ -104,11 +104,37 @@
 	melee_damage_upper = 8
 	speed = 1
 	ai_controller = /datum/ai_controller/basic_controller/void_pathfinder
+	var/timer_id
 
 /mob/living/basic/void_creature/consumed_pathfinder/Initialize(mapload)
 	. = ..()
-	// Set up ranged attacks
-	AddComponent(/datum/component/ranged_attacks, /obj/projectile/magic/voidbolt, null, null, null, null, 6)
+	// Start automatic firing timer
+	timer_id = addtimer(CALLBACK(src, PROC_REF(fire_bolt)), 3 SECONDS, TIMER_LOOP | TIMER_STOPPABLE)
+
+/mob/living/basic/void_creature/consumed_pathfinder/Destroy()
+	if(timer_id)
+		deltimer(timer_id)
+		timer_id = null
+	return ..()
+
+/mob/living/basic/void_creature/consumed_pathfinder/proc/fire_bolt()
+	if(QDELETED(src) || stat == DEAD)
+		return
+	var/list/targets = list()
+	for(var/mob/living/L in view(7, src))
+		if(!compare_factions(src, L) && !L.stat)
+			targets += L
+	if(!length(targets))
+		return
+	var/mob/living/target = pick(targets)
+
+	// Direct projectile firing without preparePixelProjectile
+	var/obj/projectile/magic/voidbolt/bolt = new(get_turf(src))
+	bolt.original = target
+	bolt.firer = src
+	bolt.yo = target.y - y
+	bolt.xo = target.x - x
+	bolt.fire()
 
 /mob/living/basic/void_creature/consumed_pathfinder/drop_loot()
 	var/loot_type = pick_loot_from_table(consumed_pathfinder_drops)
