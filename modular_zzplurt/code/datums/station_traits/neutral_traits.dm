@@ -14,7 +14,7 @@
 	. = ..()
 */
 //VENUS REMOVAL END
-
+/*
 /datum/station_trait/announcement_dagoth
 	name = "Announcement Sixth House"
 	trait_type = STATION_TRAIT_NEUTRAL
@@ -26,3 +26,4 @@
 /datum/station_trait/announcement_dagoth/New()
 	. = ..()
 	SSstation.announcer = /datum/centcom_announcer/dagoth_ur
+*/
