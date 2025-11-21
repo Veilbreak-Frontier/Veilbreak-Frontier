@@ -6,10 +6,17 @@
 	icon_screen = "gateway"
 	icon_keyboard = "teleport_key"
 	circuit = /obj/item/circuitboard/computer/portal_control
+
+	// Force solidity - override any potential inheritance issues
 	density = TRUE
+	anchored = TRUE
+	pass_flags_self = PASSMACHINE
+	// Remove climbable as it's not a standard property
 
 	var/obj/machinery/portal/linked_portal
 	var/generation_in_progress = FALSE
+	var/is_generating = FALSE // More persistent flag for the entire generation cycle
+	var/generation_cooldown_until = 0 // Timestamp (world.time) until which generation is on cooldown
 	var/cleanup_in_progress = FALSE
 	var/list/last_ui_data = list()
 	var/generation_progress_timer
@@ -17,14 +24,43 @@
 	var/last_ui_update = 0
 	var/ui_update_cooldown = 5
 
+
 /obj/machinery/computer/portal_control/Initialize(mapload, obj/item/circuitboard/C)
 	. = ..()
+
+	// Force density and solidity
+	density = TRUE
+	set_density(TRUE)
 
 	// Wait for subsystems to be ready before attempting linkup
 	if(!subsystems_ready_for_portals())
 		addtimer(CALLBACK(src, .proc/delayed_linkup), 5 SECONDS)
 	else
 		delayed_linkup()
+
+// Block all movement through this object for living mobs
+/obj/machinery/computer/portal_control/CanAllowThrough(atom/movable/mover, border_dir)
+	if(isliving(mover))
+		return FALSE
+	return ..()
+
+// Explicitly block all movement through this object for living mobs
+/obj/machinery/computer/portal_control/CanPass(atom/movable/mover, border_dir)
+	if(isliving(mover))
+		return FALSE
+	return ..()
+
+// Prevent living mobs from crossing this object
+/obj/machinery/computer/portal_control/Cross(atom/movable/mover)
+	if(isliving(mover))
+		return FALSE
+	return ..()
+
+// Prevent living mobs from uncrossing this object
+/obj/machinery/computer/portal_control/Uncross(atom/movable/mover)
+	if(isliving(mover))
+		return FALSE
+	return ..()
 
 /obj/machinery/computer/portal_control/proc/delayed_linkup()
 	try_to_linkup()
@@ -112,6 +148,8 @@
 
 /obj/machinery/computer/portal_control/proc/on_generation_completed()
 	generation_in_progress = FALSE
+	is_generating = FALSE
+	generation_cooldown_until = world.time + 200 // 20 seconds cooldown
 	cleanup_in_progress = FALSE
 
 	if(linked_portal?.destination && !cached_portal_name)
@@ -126,6 +164,8 @@
 
 /obj/machinery/computer/portal_control/proc/on_generation_failed(reason)
 	generation_in_progress = FALSE
+	is_generating = FALSE
+	generation_cooldown_until = world.time + 200 // 20 seconds cooldown
 	cleanup_in_progress = FALSE
 
 	stop_generation_monitoring()
@@ -224,6 +264,8 @@
 
 	// If generation was in progress, cancel it
 	if(generation_in_progress)
+		generation_cooldown_until = world.time + 200 // 20 seconds cooldown
+		is_generating = FALSE
 		generation_in_progress = FALSE
 		stop_generation_monitoring()
 		say("Portal stabilization cancelled due to power failure.")
