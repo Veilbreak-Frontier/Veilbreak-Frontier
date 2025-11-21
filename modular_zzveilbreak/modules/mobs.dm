@@ -192,7 +192,7 @@
 		C.adjust_stutter(4 SECONDS)
 	return TRUE
 
-// SIMPLIFIED AND WORKING AI CONTROLLERS
+// AI CONTROLLERS AND BEHAVIORS
 
 // Base void AI - much more aggressive
 /datum/ai_controller/basic_controller/void
@@ -252,9 +252,9 @@
 	ai_movement = /datum/ai_movement/basic_avoidance
 	idle_behavior = /datum/idle_behavior/idle_random_walk
 	planning_subtrees = list(
-		/datum/ai_planning_subtree/target_retaliate, // Flee if attacked
+		/datum/ai_planning_subtree/target_retaliate,
 		/datum/ai_planning_subtree/simple_find_target,
-		/datum/ai_planning_subtree/void_pathfinder_summon, // New summon logic
+		/datum/ai_planning_subtree/void_pathfinder_summon,
 		/datum/ai_planning_subtree/maintain_distance_from_target, // Kiting
 		/datum/ai_planning_subtree/basic_ranged_attack_subtree, // Attack when in range
 	)
@@ -395,6 +395,82 @@
 
 	controller.set_blackboard_key(BB_VOID_HEAL_COOLDOWN, world.time + action_cooldown)
 	return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_SUCCEEDED
+
+// NEW AI BEHAVIORS AND SUBTREES TO FIX COMPILER ERRORS
+
+// BEHAVIOR for moving towards a target
+/datum/ai_behavior/move_towards_target
+	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT
+
+/datum/ai_behavior/move_towards_target/perform(seconds_per_tick, datum/ai_controller/controller, target_key)
+	var/atom/movable/target = controller.blackboard[target_key]
+	if(!target)
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
+
+	var/mob/living/owner = controller.pawn
+	// Stop if we are next to the target
+	if(get_dist(owner, target) <= 1)
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_SUCCEEDED
+
+	controller.move_towards(target, 0)
+	return AI_BEHAVIOR_CONTINUE
+
+// SUBTREE for kiting/maintaining distance
+/datum/ai_planning_subtree/maintain_distance_from_target
+/datum/ai_planning_subtree/maintain_distance_from_target/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+	var/mob/living/target = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
+	if(!target)
+		return
+
+	var/mob/living/owner = controller.pawn
+	var/dist = get_dist(owner, target)
+
+	var/min_dist = controller.blackboard[BB_MAINTAIN_DISTANCE_MIN] || 4
+	var/max_dist = controller.blackboard[BB_MAINTAIN_DISTANCE_MAX] || 6
+
+	// Too close, back away
+	if(dist < min_dist)
+		// Re-use the existing flee logic
+		var/datum/ai_planning_subtree/flee_target/flee_subtree = new()
+		return flee_subtree.SelectBehaviors(controller, seconds_per_tick)
+
+	// Too far, move closer
+	if(dist > max_dist)
+		controller.queue_behavior(/datum/ai_behavior/move_towards_target, BB_BASIC_MOB_CURRENT_TARGET)
+		return SUBTREE_RETURN_FINISH_PLANNING
+
+	// Just right, do nothing and let the next subtree handle attacking
+	return
+
+// BEHAVIOR for moving to a target and then performing another action
+/datum/ai_behavior/move_to_and_perform
+	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT
+	var/target_key
+	var/action_behavior_type
+	var/prox_distance = 1
+
+/datum/ai_behavior/move_to_and_perform/New(datum/ai_controller/controller, t_key, action_type, prox)
+	src.target_key = t_key
+	src.action_behavior_type = action_type
+	if(prox > 1)
+		src.prox_distance = prox
+
+/datum/ai_behavior/move_to_and_perform/perform(seconds_per_tick, datum/ai_controller/controller)
+	var/atom/movable/target = controller.blackboard[target_key]
+	if(!target || QDELETED(target))
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
+
+	var/mob/living/owner = controller.pawn
+	var/dist = get_dist(owner, target)
+
+	if(dist > prox_distance)
+		controller.move_towards(target, 0)
+		return AI_BEHAVIOR_CONTINUE
+	else
+		// In range, perform the action
+		var/datum/ai_behavior/action = new action_behavior_type()
+		// We pass the original target key to the action behavior
+		return action.perform(seconds_per_tick, controller, target_key)
 
 // Visual effect for healing
 /obj/effect/temp_visual/heal
