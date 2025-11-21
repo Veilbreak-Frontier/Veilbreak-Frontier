@@ -131,36 +131,9 @@
 		ui_data.tattoo_design = ""
 
 		// Refresh UI
-		ui_interact(user)
+		SStgui.update_uis(src)
 		to_chat(user, span_green("Tattoo applied successfully!"))
 		return TRUE
 	else
 		to_chat(user, span_warning("Failed to apply tattoo!"))
 		return FALSE
-
-/obj/item/custom_tattoo_kit/ui_interact(mob/user, datum/tgui/ui)
-	ui = SStgui.try_update_ui(user, src, ui)
-	if(!ui)
-		ui = new(user, src, "TattooKit")
-		ui.open()
-
-/obj/item/custom_tattoo_kit/ui_act(action, params, datum/tgui/ui, mob/user)
-	. = ..()
-	if(.)
-		return
-
-	var/datum/custom_tattoo_ui_data/ui_data = current_target.get_tattoo_ui_data("global")
-
-	switch(action)
-		if("set_artist", "set_design", "set_color", "set_font", "set_flair")
-			var/key = copytext(action, 5)
-			ui_data.vars[key] = params["value"]
-			. = TRUE
-		if("set_layer")
-			ui_data.selected_layer = text2num(params["value"])
-			. = TRUE
-
-	if(.)
-		ui_interact(user)
-
-	return
