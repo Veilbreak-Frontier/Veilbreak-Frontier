@@ -55,20 +55,17 @@
 
 /datum/design/nanites/nanite_debugging
 	name = "Nanite Debugging"
-	desc = "Enables various high-cost diagnostics in the nanites, making them able to communicate their program list to portable scanners. \
-	Doing so uses some power, slightly decreasing their replication speed."
+	desc = "Enables various high-cost diagnostics in the nanites, making them able to communicate their program list to portable scanners. Doing so uses some power, slightly decreasing their replication speed."
 	id = "debugging_nanites"
 	program_type = /datum/nanite_program/nanite_debugging
 	category = list("Utility Nanites")
 
-/*
 /datum/design/nanites/access
 	name = "Subdermal ID"
 	desc = "The nanites store the host's ID access rights in a subdermal magnetic strip. Updates when triggered, copying the host's current access."
 	id = "access_nanites"
 	program_type = /datum/nanite_program/access
 	category = list("Utility Nanites")
-*/
 
 /datum/design/nanites/relay
 	name = "Relay"
@@ -98,15 +95,12 @@
 	program_type = /datum/nanite_program/emp
 	category = list("Utility Nanites")
 
-/*
 /datum/design/nanites/spreading
 	name = "Infective Exo-Locomotion"
-	desc = "The nanites gain the ability to survive for brief periods outside of the human body, as well as the ability to start new colonies without an integration process; \
-			resulting in an extremely infective strain of nanites."
+	desc = "The nanites gain the ability to survive for brief periods outside of the human body, as well as the ability to start new colonies without an integration process; resulting in an extremely infective strain of nanites."
 	id = "spreading_nanites"
 	program_type = /datum/nanite_program/spreading
 	category = list("Utility Nanites")
-*/
 
 /datum/design/nanites/nanite_sting
 	name = "Nanite Sting"
@@ -117,8 +111,7 @@
 
 /datum/design/nanites/mitosis
 	name = "Mitosis"
-	desc = "The nanites gain the ability to self-replicate, using bluespace to power the process, instead of drawing from a template. This rapidly speeds up the replication rate,\
-			but it causes occasional software errors due to faulty copies."
+	desc = "The nanites gain the ability to self-replicate, using bluespace to power the process, instead of drawing from a template. This rapidly speeds up the replication rate, but it causes occasional software errors due to faulty copies."
 	id = "mitosis_nanites"
 	program_type = /datum/nanite_program/mitosis
 	category = list("Utility Nanites")
@@ -131,15 +124,12 @@
 	program_type = /datum/nanite_program/regenerative
 	category = list("Medical Nanites")
 
-/*
 /datum/design/nanites/regenerative_advanced
 	name = "Bio-Reconstruction"
-	desc = "The nanites manually repair and replace organic cells, acting much faster than normal regeneration. \
-			However, this program cannot detect the difference between harmed and unharmed, causing it to consume nanites even if it has no effect."
+	desc = "The nanites manually repair and replace organic cells, acting much faster than normal regeneration. However, this program cannot detect the difference between harmed and unharmed, causing it to consume nanites even if it has no effect."
 	id = "regenerative_plus_nanites"
 	program_type = /datum/nanite_program/regenerative/advanced
 	category = list("Medical Nanites")
-*/
 
 /datum/design/nanites/temperature
 	name = "Temperature Adjustment"
@@ -157,8 +147,7 @@
 
 /datum/design/nanites/purging_advanced
 	name = "Selective Blood Purification"
-	desc = "The nanites purge toxins and dangerous chemicals from the host's bloodstream, while ignoring beneficial chemicals. \
-			The added processing power required to analyze the chemicals severely increases the nanite consumption rate."
+	desc = "The nanites purge toxins and dangerous chemicals from the host's bloodstream, while ignoring beneficial chemicals. The added processing power required to analyze the chemicals severely increases the nanite consumption rate."
 	id = "purging_plus_nanites"
 	program_type = /datum/nanite_program/purging/advanced
 	category = list("Medical Nanites")
@@ -245,7 +234,6 @@
 
 ////////////////////DEFECTIVE NANITES//////////////////////////////////////
 
-/*
 /datum/design/nanites/glitch
 	name = "Glitch"
 	desc = "A heavy software corruption that causes nanites to gradually break down."
@@ -301,7 +289,6 @@
 	id = "braindecay_nanites"
 	program_type = /datum/nanite_program/brain_decay
 	category = list("Defective Nanites")
-*/
 
 ////////////////////WEAPONIZED NANITES/////////////////////////////////////
 
@@ -335,8 +322,7 @@
 
 /datum/design/nanites/meltdown
 	name = "Meltdown"
-	desc = "Causes an internal meltdown inside the nanites, causing internal burns inside the host as well as rapidly destroying the nanite population.\
-			Sets the nanites' safety threshold to 0 when activated."
+	desc = "Causes an internal meltdown inside the nanites, causing internal burns inside the host as well as rapidly destroying the nanite population. Sets the nanites' safety threshold to 0 when activated."
 	id = "meltdown_nanites"
 	program_type = /datum/nanite_program/meltdown
 	category = list("Weaponized Nanites")
@@ -355,7 +341,6 @@
 	program_type = /datum/nanite_program/pyro
 	category = list("Weaponized Nanites")
 
-/*
 /datum/design/nanites/heart_stop
 	name = "Heart-Stopper"
 	desc = "Stops the host's heart when triggered; restarts it if triggered again."
@@ -364,12 +349,10 @@
 	category = list("Weaponized Nanites")
 
 /datum/design/nanites/explosive
-	name = "Chain Detonation"
 	desc = "Blows up all the nanites inside the host in a chain reaction when triggered."
 	id = "explosive_nanites"
 	program_type = /datum/nanite_program/explosive
 	category = list("Weaponized Nanites")
-*/
 
 /datum/design/nanites/mind_control
 	name = "Mind Control"
@@ -443,15 +426,12 @@
 	program_type = /datum/nanite_program/comm/voice
 	category = list("Suppression Nanites")
 
-/*
 /datum/design/nanites/speech
 	name = "Forced Speech"
 	desc = "The nanites force the host to say a pre-programmed sentence when triggered."
 	id = "speech_nanites"
 	program_type = /datum/nanite_program/comm/speech
 	category = list("Suppression Nanites")
-*/
-
 /datum/design/nanites/hallucination
 	name = "Hallucination"
 	desc = "The nanites make the host see and hear things that aren't real."
@@ -578,8 +558,7 @@
 
 /datum/design/nanites/unsafe_storage
 	name = "S.L.O. Protocol"
-	desc = "Storage Protocol: 'S.L.O.P.', or Storage Level Override Protocol, completely disables the safety measures normally present in nanites,\
-		allowing them to reach much higher saturation levels, but at the risk of causing internal damage to the host."
+	desc = "Storage Protocol: 'S.L.O.P.', or Storage Level Override Protocol, completely disables the safety measures normally present in nanites, allowing them to reach much higher saturation levels, but at the risk of causing internal damage to the host."
 	id = "unsafe_storage_nanites"
 	program_type = /datum/nanite_program/protocol/unsafe_storage
 	category = list("Protocols_Nanites")

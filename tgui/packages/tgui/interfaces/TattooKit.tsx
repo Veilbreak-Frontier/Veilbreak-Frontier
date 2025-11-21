@@ -1,5 +1,5 @@
 // modular_zzveilbreak/code/modules/tattoo/TattooKit.tsx
-import { useState } from 'react';
+import { type CSSProperties, useState } from 'react';
 import {
   Box,
   Button,
@@ -63,6 +63,45 @@ type Data = {
 
   body_parts: BodyPart[];
   existing_tattoos: Tattoo[];
+};
+
+// Helper to map font keys to CSS font-family values for the preview
+const getFontFamily = (fontKey: string): string => {
+  const fontMap: Record<string, string> = {
+    PEN_FONT: "'Courier New', Courier, monospace",
+    FOUNTAIN_PEN_FONT: "'Brush Script MT', cursive",
+    PRINTER_FONT: "'Lucida Console', Monaco, monospace",
+    CHARCOAL_FONT: "'Impact', Charcoal, sans-serif",
+    CRAYON_FONT: "'Comic Sans MS', cursive, sans-serif",
+  };
+  return fontMap[fontKey] || 'Arial, sans-serif';
+};
+
+// Helper to map flair keys to CSS styles for the preview
+const getFlairStyle = (flairKey: string): CSSProperties => {
+  const flairMap: Record<string, CSSProperties> = {
+    'flair_1': { textShadow: '0 0 3px #ff69b4' }, // Pink Flair
+    'flair_2': { textShadow: '0 0 3px #ff1493' }, // Love Flair
+    'flair_3': { textShadow: '0 0 3px #a52a2a' }, // Brown Flair
+    'flair_4': { textShadow: '0 0 3px #00ffff' }, // Cyan Flair
+    'flair_5': { textShadow: '0 0 3px #ffa500' }, // Orange Flair
+    'flair_6': { textShadow: '0 0 3px #ffff00' }, // Yellow Flair
+    'flair_7': { opacity: 0.7 }, // Subtle Flair
+    'flair_8': { fontWeight: 'bold', fontStyle: 'italic' }, // Velvet Flair
+    'flair_9': { fontWeight: 'bold', textDecoration: 'underline' }, // Velvet Notice
+    'flair_10': { letterSpacing: '2px' }, // Glossy Flair
+  };
+  return flairMap[flairKey] || {};
+};
+
+// Helper to map layer keys to CSS z-index values for the preview
+const getLayerStyle = (layerKey: number): CSSProperties => {
+  const layerMap: Record<number, CSSProperties> = {
+    1: { zIndex: 1, position: 'relative' }, // Under
+    2: { zIndex: 2, position: 'relative' }, // Normal
+    3: { zIndex: 3, position: 'relative' }, // Over
+  };
+  return layerMap[layerKey] || {};
 };
 
 const BodyPartView = (props) => {
@@ -159,11 +198,8 @@ const DesignStudio = (props) => {
   const currentPart = data.body_parts?.find(
     (p) => p.zone === selected_zone,
   ) || { name: 'Unknown' };
-  const canApply =
-    !applying &&
-    artist_name?.length > 0 &&
-    tattoo_design?.length > 0 &&
-    ink_uses > 0;
+
+  const canApply = !applying && !!artist_name && !!tattoo_design && ink_uses > 0;
 
   // Helper functions to get display names
   const getFontName = (value: string) =>
@@ -241,12 +277,14 @@ const DesignStudio = (props) => {
                     <Section title="Live Preview" fill textAlign="center">
                       <Box
                         style={{
+                          ...getFlairStyle(selected_flair),
+                          ...getLayerStyle(selected_layer),
                           border: '2px solid #666',
                           borderRadius: '4px',
                           padding: '1rem',
                           minHeight: '100px',
                           color: ink_color,
-                          fontFamily: 'Arial, sans-serif',
+                          fontFamily: getFontFamily(selected_font),
                           fontSize: '14px',
                           backgroundColor: 'rgba(0,0,0,0.05)',
                           wordBreak: 'break-word',
@@ -327,6 +365,27 @@ const DesignStudio = (props) => {
                         />
                       </LabeledList.Item>
                     </LabeledList>
+                  </Section>
+                </Stack.Item>
+
+                <Stack.Item>
+                  <Section title="Preview" textAlign="center">
+                    <Box
+                      style={{
+                        ...getFlairStyle(selected_flair),
+                        ...getLayerStyle(selected_layer),
+                        border: '2px solid #555',
+                        padding: '1rem',
+                        minHeight: '60px',
+                        color: ink_color,
+                        fontFamily: getFontFamily(selected_font),
+                        fontSize: '14px',
+                        backgroundColor: 'rgba(0,0,0,0.2)',
+                        wordBreak: 'break-word',
+                      }}
+                    >
+                      {tattoo_design || 'Enter design text...'}
+                    </Box>
                   </Section>
                 </Stack.Item>
 

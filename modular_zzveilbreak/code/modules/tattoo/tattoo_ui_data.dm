@@ -58,7 +58,7 @@
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "TattooKit")
-		ui.set_autoupdate(FALSE)
+		ui.set_autoupdate(TRUE)
 		ui.open()
 
 /obj/item/custom_tattoo_kit/ui_data(mob/user)
@@ -86,11 +86,22 @@
 		data["ink_color"] = ui_data.ink_color
 		data["design_mode"] = ui_data.design_mode
 		data["debug_mode"] = ui_data.debug_mode
+	else
+		data["artist_name"] = ""
+		data["tattoo_design"] = ""
+		data["selected_zone"] = ""
+		data["selected_layer"] = CUSTOM_TATTOO_LAYER_NORMAL
+		data["selected_font"] = PEN_FONT
+		data["selected_flair"] = null
+		data["ink_color"] = "#000000"
+		data["design_mode"] = FALSE
+		data["debug_mode"] = FALSE
 
 	// Options
-	data["font_options"] = ui_data.font_options
-	data["flair_options"] = ui_data.flair_options
-	data["layer_options"] = ui_data.layer_options
+	var/datum/custom_tattoo_ui_data/static_data_holder = new()
+	data["font_options"] = static_data_holder.font_options
+	data["flair_options"] = static_data_holder.flair_options
+	data["layer_options"] = static_data_holder.layer_options
 
 	// Body parts - ensure proper structure
 	data["body_parts"] = list()

@@ -44,17 +44,14 @@
 	refill_ink(user)
 
 /obj/item/custom_tattoo_kit/proc/refill_ink(mob/user)
+	if(ink_uses == max_ink_uses)
+		to_chat(user, span_warning("The tattoo kit is already full of ink."))
+		return
 	ink_uses = max_ink_uses
 	to_chat(user, span_notice("Tattoo kit refilled."))
 	update_appearance()
 	if(current_target)
 		ui_interact(user)
-
-/obj/item/custom_tattoo_kit/ui_interact(mob/user, datum/tgui/ui)
-	ui = SStgui.try_update_ui(user, src, ui)
-	if(!ui)
-		ui = new(user, src, "TattooKit")
-		ui.open()
 
 /obj/item/custom_tattoo_kit/proc/can_apply_tattoo(mob/user)
 	if(!current_target)
@@ -134,7 +131,7 @@
 		ui_data.tattoo_design = ""
 
 		// Refresh UI
-		ui_interact(user)
+		SStgui.update_uis(src)
 		to_chat(user, span_green("Tattoo applied successfully!"))
 		return TRUE
 	else

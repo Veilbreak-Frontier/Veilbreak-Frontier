@@ -92,8 +92,8 @@
 
 // Consumed Pathfinder - Vicious ranged attacker with strategic summoning
 /mob/living/basic/void_creature/consumed_pathfinder
-	name = "Consumed Frontier"
-	desc = "A Frontier just like you, consumed by the void. It moves with unnatural purpose."
+	name = "Consumed Pathfinder"
+	desc = "A pathfinder just like you, consumed by the void. It moves with unnatural purpose."
 	icon = 'modular_zzveilbreak/icons/mob/mobs.dmi'
 	icon_state = "consumed"
 	icon_living = "consumed"
@@ -104,11 +104,37 @@
 	melee_damage_upper = 8
 	speed = 1
 	ai_controller = /datum/ai_controller/basic_controller/void_pathfinder
+	var/timer_id
 
 /mob/living/basic/void_creature/consumed_pathfinder/Initialize(mapload)
 	. = ..()
-	// Set up ranged attacks
-	AddComponent(/datum/component/ranged_attacks, /obj/projectile/magic/voidbolt, null, null, null, null, 6)
+	// Start automatic firing timer
+	timer_id = addtimer(CALLBACK(src, PROC_REF(fire_bolt)), 3 SECONDS, TIMER_LOOP | TIMER_STOPPABLE)
+
+/mob/living/basic/void_creature/consumed_pathfinder/Destroy()
+	if(timer_id)
+		deltimer(timer_id)
+		timer_id = null
+	return ..()
+
+/mob/living/basic/void_creature/consumed_pathfinder/proc/fire_bolt()
+	if(QDELETED(src) || stat == DEAD)
+		return
+	var/list/targets = list()
+	for(var/mob/living/L in view(7, src))
+		if(!compare_factions(src, L) && !L.stat)
+			targets += L
+	if(!length(targets))
+		return
+	var/mob/living/target = pick(targets)
+
+	// Direct projectile firing without preparePixelProjectile
+	var/obj/projectile/magic/voidbolt/bolt = new(get_turf(src))
+	bolt.original = target
+	bolt.firer = src
+	bolt.yo = target.y - y
+	bolt.xo = target.x - x
+	bolt.fire()
 
 /mob/living/basic/void_creature/consumed_pathfinder/drop_loot()
 	var/loot_type = pick_loot_from_table(consumed_pathfinder_drops)
@@ -126,8 +152,8 @@
 	icon_dead = "void_bug_dead"
 	maxHealth = 200 // Much tankier
 	health = 200
-	melee_damage_lower = 4
-	melee_damage_upper = 7
+	melee_damage_lower = 2
+	melee_damage_upper = 5
 	speed = 1.3 // Slower but tougher
 	attack_verb_continuous = "crushes"
 	attack_verb_simple = "crush"
@@ -192,7 +218,7 @@
 		C.adjust_stutter(4 SECONDS)
 	return TRUE
 
-// SIMPLIFIED AND WORKING AI CONTROLLERS
+// AI CONTROLLERS AND BEHAVIORS
 
 // Base void AI - much more aggressive
 /datum/ai_controller/basic_controller/void
@@ -240,11 +266,13 @@
 		/datum/ai_planning_subtree/basic_melee_attack_subtree,
 	)
 
-// Consumed Pathfinder AI - Strategic summoner (SIMPLIFIED AND WORKING)
+// Consumed Pathfinder AI - Strategic kiter and summoner
 /datum/ai_controller/basic_controller/void_pathfinder
 	blackboard = list(
 		BB_TARGETING_STRATEGY = /datum/targeting_strategy/basic/void_aggressive,
 		BB_VOID_SUMMON_COOLDOWN = 0,
+		BB_RANGED_SKIRMISH_MIN_DISTANCE = 4, // Keep at least 4 tiles away
+		BB_RANGED_SKIRMISH_MAX_DISTANCE = 6, // But no more than 6 tiles
 	)
 
 	ai_movement = /datum/ai_movement/basic_avoidance
@@ -252,13 +280,15 @@
 	planning_subtrees = list(
 		/datum/ai_planning_subtree/target_retaliate,
 		/datum/ai_planning_subtree/simple_find_target,
-		/datum/ai_planning_subtree/void_pathfinder_simple_summon,
-		/datum/ai_planning_subtree/basic_ranged_attack_subtree,
+		/datum/ai_planning_subtree/flee_target, // Let the default flee logic run
+		/datum/ai_planning_subtree/maintain_distance_from_target, // Our custom kiting logic
+		/datum/ai_planning_subtree/void_pathfinder_summon,
+		/datum/ai_planning_subtree/basic_ranged_attack_subtree, // Attack when in range
 	)
 
-// SIMPLIFIED summoning that actually works
-/datum/ai_planning_subtree/void_pathfinder_simple_summon
-/datum/ai_planning_subtree/void_pathfinder_simple_summon/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+// Pathfinder Summoning Subtree
+/datum/ai_planning_subtree/void_pathfinder_summon
+/datum/ai_planning_subtree/void_pathfinder_summon/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
 	var/mob/living/basic/void_creature/consumed_pathfinder/pathfinder = controller.pawn
 	if(!istype(pathfinder))
 		return
@@ -267,107 +297,210 @@
 	if(!target)
 		return
 
-	// Simple summoning logic - summon if target exists and cooldown is ready
-	if(world.time > controller.blackboard[BB_VOID_SUMMON_COOLDOWN])
-		controller.queue_behavior(/datum/ai_behavior/void_simple_summon, BB_BASIC_MOB_CURRENT_TARGET)
-		return SUBTREE_RETURN_FINISH_PLANNING
+	// Cooldown check
+	if(world.time <= controller.blackboard[BB_VOID_SUMMON_COOLDOWN])
+		return
 
-// SIMPLIFIED summon behavior that actually works
-/datum/ai_behavior/void_simple_summon
-	action_cooldown = 20 SECONDS
+	// Only summon if there are not too many other voidlings around
+	var/allies = 0
+	for(var/mob/living/basic/void_creature/voidling/V in view(7, pathfinder))
+		allies++
+	if(allies >= 3)
+		return
+
+	// Check if we are a safe distance away to summon
+	var/dist = get_dist(pathfinder, target)
+	if(dist < 4)
+		return // Too close, prioritize moving away
+
+	controller.queue_behavior(/datum/ai_behavior/void_summon, BB_BASIC_MOB_CURRENT_TARGET)
+	return SUBTREE_RETURN_FINISH_PLANNING
+
+// Pathfinder Summon Behavior
+/datum/ai_behavior/void_summon
+	action_cooldown = 25 SECONDS // Longer cooldown
 	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT
 
-/datum/ai_behavior/void_simple_summon/perform(seconds_per_tick, datum/ai_controller/controller, target_key)
+/datum/ai_behavior/void_summon/perform(seconds_per_tick, datum/ai_controller/controller, target_key)
 	var/mob/living/basic/void_creature/consumed_pathfinder/pathfinder = controller.pawn
 	if(!istype(pathfinder))
 		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 
-	// Summon 1 voidling
-	var/mob/living/basic/void_creature/voidling/new_voidling = new(pathfinder.loc)
-	new_voidling.faction = pathfinder.faction.Copy()
+	pathfinder.visible_message(span_warning("[pathfinder] begins to channel the void..."))
+	if(!do_after(pathfinder, 30, target = controller.blackboard[target_key])) // 3 second cast time
+		pathfinder.visible_message(span_warning("[pathfinder]'s summoning was interrupted!"))
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 
-	// Make summoned voidling aggressive toward our target
-	var/mob/living/target = controller.blackboard[target_key]
-	if(target && new_voidling.ai_controller)
-		new_voidling.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target)
+	// Summon 1-2 voidlings
+	var/summon_count = rand(1, 2)
+	for(var/i in 1 to summon_count)
+		var/mob/living/basic/void_creature/voidling/new_voidling = new(pathfinder.loc)
+		new_voidling.faction = pathfinder.faction.Copy()
+
+		// Make summoned voidling aggressive toward our target
+		var/mob/living/target = controller.blackboard[target_key]
+		if(target && new_voidling.ai_controller)
+			new_voidling.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target)
 
 	// Set cooldown
 	controller.set_blackboard_key(BB_VOID_SUMMON_COOLDOWN, world.time + action_cooldown)
 
 	// Visual and sound feedback
 	playsound(pathfinder, 'sound/effects/magic/summon_magic.ogg', 50, TRUE)
-	pathfinder.visible_message(span_warning("[pathfinder] summons a voidling from the void!"))
+	pathfinder.visible_message(span_danger("[pathfinder] summons voidlings from a tear in reality!"))
 
 	return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_SUCCEEDED
 
-// Void Healer AI - Smart support (SIMPLIFIED AND WORKING)
+// Void Healer AI - Smart support, prioritizes healing
 /datum/ai_controller/basic_controller/void_healer
 	blackboard = list(
-		BB_TARGETING_STRATEGY = /datum/targeting_strategy/basic/void_aggressive,
 		BB_VOID_HEAL_COOLDOWN = 0,
 	)
 
 	ai_movement = /datum/ai_movement/basic_avoidance
 	idle_behavior = /datum/idle_behavior/idle_random_walk
 	planning_subtrees = list(
-		/datum/ai_planning_subtree/target_retaliate,
-		/datum/ai_planning_subtree/simple_find_target,
-		/datum/ai_planning_subtree/void_healer_simple_heal,
-		/datum/ai_planning_subtree/flee_target,
+		/datum/ai_planning_subtree/void_healer_find_and_heal, // New primary logic
+		/datum/ai_planning_subtree/target_retaliate, // Flee if attacked
+		/datum/ai_planning_subtree/simple_find_target, // Find enemy to flee from
+		/datum/ai_planning_subtree/flee_target, // Flee
 	)
 
-// SIMPLIFIED healing that actually works
-/datum/ai_planning_subtree/void_healer_simple_heal
-/datum/ai_planning_subtree/void_healer_simple_heal/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+// New healing subtree that finds a target and moves to it
+/datum/ai_planning_subtree/void_healer_find_and_heal
+/datum/ai_planning_subtree/void_healer_find_and_heal/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
 	var/mob/living/basic/void_creature/void_healer/healer = controller.pawn
 	if(!istype(healer))
 		return
 
-	// Check if we can heal
+	// Cooldown check
 	if(world.time <= controller.blackboard[BB_VOID_HEAL_COOLDOWN])
 		return
 
-	// Find injured allies
-	for(var/mob/living/ally in view(7, healer))
-		if(ally.faction == healer.faction && ally.health > 0 && ally != healer && ally.health < ally.maxHealth * 0.8)
-			controller.queue_behavior(/datum/ai_behavior/void_simple_heal)
-			return SUBTREE_RETURN_FINISH_PLANNING
-
-// SIMPLIFIED heal behavior that actually works
-/datum/ai_behavior/void_simple_heal
-	action_cooldown = 6 SECONDS
-
-/datum/ai_behavior/void_simple_heal/perform(seconds_per_tick, datum/ai_controller/controller)
-	var/mob/living/basic/void_creature/void_healer/healer = controller.pawn
-	if(!istype(healer))
-		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
-
-	// Find the most injured ally
+	// Find the most injured ally in a larger radius
 	var/mob/living/most_injured_ally = null
-	var/lowest_health = INFINITY
-
-	for(var/mob/living/ally in view(7, healer))
+	var/lowest_health_percent = 1
+	for(var/mob/living/ally in view(10, healer)) // Increased view range
 		if(ally.faction == healer.faction && ally.health > 0 && ally != healer)
-			if(ally.health < lowest_health)
-				lowest_health = ally.health
+			var/health_percent = ally.health / ally.maxHealth
+			if(health_percent < lowest_health_percent)
+				lowest_health_percent = health_percent
 				most_injured_ally = ally
 
-	if(!most_injured_ally)
+	if(most_injured_ally)
+		// We found someone to heal.
+		controller.set_blackboard_key("heal_target", most_injured_ally)
+		controller.queue_behavior(/datum/ai_behavior/move_to_and_perform, "heal_target", /datum/ai_behavior/void_heal, 3) // Move within 3 tiles to heal
+		return SUBTREE_RETURN_FINISH_PLANNING
+
+// New heal behavior, simpler and more direct
+/datum/ai_behavior/void_heal
+	action_cooldown = 5 SECONDS // Slightly faster cooldown
+
+/datum/ai_behavior/void_heal/perform(seconds_per_tick, datum/ai_controller/controller, target_key)
+	var/mob/living/basic/void_creature/void_healer/healer = controller.pawn
+	var/mob/living/target_to_heal = controller.blackboard[target_key]
+
+	if(!istype(healer) || !istype(target_to_heal) || target_to_heal.stat == DEAD)
 		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 
+	// Check if target still needs healing
+	if(target_to_heal.health >= target_to_heal.maxHealth)
+		healer.visible_message(span_notice("[healer] pauses its healing as [target_to_heal] is fully recovered."))
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_SUCCEEDED
+
 	// Heal the ally
-	var/heal_amount = 30
-	most_injured_ally.adjustBruteLoss(-heal_amount)
-	most_injured_ally.adjustFireLoss(-heal_amount)
+	var/heal_amount = 40 // Stronger heal
+	target_to_heal.adjustBruteLoss(-heal_amount)
+	target_to_heal.adjustFireLoss(-heal_amount)
 
 	// Visual and sound feedback
 	playsound(healer, 'sound/effects/magic/staff_healing.ogg', 50, TRUE)
-	new /obj/effect/temp_visual/heal(most_injured_ally.loc, "#8A2BE2")
+	new /obj/effect/temp_visual/heal(target_to_heal.loc, "#8A2BE2") // Purple heal effect
 
-	healer.visible_message(span_green("[healer] pulses with violet energy, healing [most_injured_ally]!"))
+	healer.visible_message(span_green("[healer] pulses with violet energy, mending [target_to_heal]'s wounds!"))
 
 	controller.set_blackboard_key(BB_VOID_HEAL_COOLDOWN, world.time + action_cooldown)
 	return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_SUCCEEDED
+
+// CORRECTED AI BEHAVIORS AND SUBTREES
+
+// BEHAVIOR for moving towards a target
+/datum/ai_behavior/move_towards_target
+	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT
+
+/datum/ai_behavior/move_towards_target/perform(seconds_per_tick, datum/ai_controller/controller, target_key)
+	var/atom/movable/target = controller.blackboard[target_key]
+	if(!target)
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
+
+	var/mob/living/owner = controller.pawn
+	// Stop if we are next to the target
+	if(get_dist(owner, target) <= 1)
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_SUCCEEDED
+
+	controller.ai_movement.start_moving_towards(controller, target, 1)
+	return
+
+// SUBTREE for kiting/maintaining distance
+/datum/ai_planning_subtree/maintain_distance_from_target
+/datum/ai_planning_subtree/maintain_distance_from_target/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+	var/mob/living/target = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
+	if(!target)
+		controller.clear_blackboard_key(BB_BASIC_MOB_FLEE_TARGET)
+		return
+
+	var/mob/living/owner = controller.pawn
+	var/dist = get_dist(owner, target)
+
+	var/min_dist = controller.blackboard[BB_RANGED_SKIRMISH_MIN_DISTANCE] || 4
+	var/max_dist = controller.blackboard[BB_RANGED_SKIRMISH_MAX_DISTANCE] || 6
+
+	// Too close, tell the flee subtree to run
+	if(dist < min_dist)
+		controller.set_blackboard_key(BB_BASIC_MOB_FLEE_TARGET, target)
+		return
+
+	// No longer too close, tell the flee subtree to stop
+	controller.clear_blackboard_key(BB_BASIC_MOB_FLEE_TARGET)
+
+	// Too far, move closer
+	if(dist > max_dist)
+		controller.queue_behavior(/datum/ai_behavior/move_towards_target, BB_BASIC_MOB_CURRENT_TARGET)
+		return SUBTREE_RETURN_FINISH_PLANNING
+
+	// Just right, do nothing and let the next subtrees handle attacking or summoning
+	return
+
+// BEHAVIOR for moving to a target and then performing another action
+/datum/ai_behavior/move_to_and_perform
+	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT
+	var/target_key
+	var/action_behavior_type
+	var/prox_distance = 1
+
+/datum/ai_behavior/move_to_and_perform/New(datum/ai_controller/controller, t_key, action_type, prox)
+	src.target_key = t_key
+	src.action_behavior_type = action_type
+	if(prox > 1)
+		src.prox_distance = prox
+
+/datum/ai_behavior/move_to_and_perform/perform(seconds_per_tick, datum/ai_controller/controller)
+	var/atom/movable/target = controller.blackboard[target_key]
+	if(!target || QDELETED(target))
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
+
+	var/mob/living/owner = controller.pawn
+	var/dist = get_dist(owner, target)
+
+	if(dist > prox_distance)
+		controller.ai_movement.start_moving_towards(controller, target, prox_distance)
+		return
+	else
+		// In range, perform the action
+		var/datum/ai_behavior/action = new action_behavior_type()
+		// We pass the original target key to the action behavior
+		return action.perform(seconds_per_tick, controller, target_key)
 
 // Visual effect for healing
 /obj/effect/temp_visual/heal
