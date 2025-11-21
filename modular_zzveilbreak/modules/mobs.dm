@@ -254,7 +254,8 @@
 	planning_subtrees = list(
 		/datum/ai_planning_subtree/target_retaliate,
 		/datum/ai_planning_subtree/simple_find_target,
-		/datum/ai_planning_subtree/maintain_distance_from_target, // Kiting
+		/datum/ai_planning_subtree/flee_target, // Let the default flee logic run
+		/datum/ai_planning_subtree/maintain_distance_from_target, // Our custom kiting logic
 		/datum/ai_planning_subtree/void_pathfinder_summon,
 		/datum/ai_planning_subtree/basic_ranged_attack_subtree, // Attack when in range
 	)
@@ -415,29 +416,12 @@
 	controller.ai_movement.start_moving_towards(controller, target, 1)
 	return
 
-// BEHAVIOR for fleeing from a target
-/datum/ai_behavior/flee_from_target
-	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT
-
-/datum/ai_behavior/flee_from_target/perform(seconds_per_tick, datum/ai_controller/controller, target_key)
-	var/atom/movable/target = controller.blackboard[target_key]
-	if(!target)
-		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
-
-	var/mob/living/owner = controller.pawn
-	// We can stop fleeing if we are far enough away
-	if(get_dist(owner, target) > (controller.blackboard[BB_RANGED_SKIRMISH_MAX_DISTANCE] || 6))
-		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_SUCCEEDED
-
-	controller.ai_movement.start_moving_away_from(controller, target)
-	return
-
-
 // SUBTREE for kiting/maintaining distance
 /datum/ai_planning_subtree/maintain_distance_from_target
 /datum/ai_planning_subtree/maintain_distance_from_target/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
 	var/mob/living/target = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
 	if(!target)
+		controller.clear_blackboard_key(BB_BASIC_MOB_FLEE_TARGET)
 		return
 
 	var/mob/living/owner = controller.pawn
@@ -446,17 +430,20 @@
 	var/min_dist = controller.blackboard[BB_RANGED_SKIRMISH_MIN_DISTANCE] || 4
 	var/max_dist = controller.blackboard[BB_RANGED_SKIRMISH_MAX_DISTANCE] || 6
 
-	// Too close, back away
+	// Too close, tell the flee subtree to run
 	if(dist < min_dist)
-		controller.queue_behavior(/datum/ai_behavior/flee_from_target, BB_BASIC_MOB_CURRENT_TARGET)
-		return SUBTREE_RETURN_FINISH_PLANNING
+		controller.set_blackboard_key(BB_BASIC_MOB_FLEE_TARGET, target)
+		return
+
+	// No longer too close, tell the flee subtree to stop
+	controller.clear_blackboard_key(BB_BASIC_MOB_FLEE_TARGET)
 
 	// Too far, move closer
 	if(dist > max_dist)
 		controller.queue_behavior(/datum/ai_behavior/move_towards_target, BB_BASIC_MOB_CURRENT_TARGET)
 		return SUBTREE_RETURN_FINISH_PLANNING
 
-	// Just right, do nothing and let the next subtree handle attacking
+	// Just right, do nothing and let the next subtrees handle attacking or summoning
 	return
 
 // BEHAVIOR for moving to a target and then performing another action
