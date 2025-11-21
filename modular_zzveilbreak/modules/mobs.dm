@@ -254,8 +254,8 @@
 	planning_subtrees = list(
 		/datum/ai_planning_subtree/target_retaliate,
 		/datum/ai_planning_subtree/simple_find_target,
-		/datum/ai_planning_subtree/void_pathfinder_summon,
 		/datum/ai_planning_subtree/maintain_distance_from_target, // Kiting
+		/datum/ai_planning_subtree/void_pathfinder_summon,
 		/datum/ai_planning_subtree/basic_ranged_attack_subtree, // Attack when in range
 	)
 
@@ -396,7 +396,7 @@
 	controller.set_blackboard_key(BB_VOID_HEAL_COOLDOWN, world.time + action_cooldown)
 	return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_SUCCEEDED
 
-// NEW AI BEHAVIORS AND SUBTREES TO FIX COMPILER ERRORS
+// CORRECTED AI BEHAVIORS AND SUBTREES
 
 // BEHAVIOR for moving towards a target
 /datum/ai_behavior/move_towards_target
@@ -412,8 +412,8 @@
 	if(get_dist(owner, target) <= 1)
 		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_SUCCEEDED
 
-	controller.move_towards(target, 0)
-	return AI_BEHAVIOR_CONTINUE
+	controller.ai_movement.start_moving_towards(controller, target, 1)
+	return
 
 // BEHAVIOR for fleeing from a target
 /datum/ai_behavior/flee_from_target
@@ -429,8 +429,8 @@
 	if(get_dist(owner, target) > (controller.blackboard[BB_RANGED_SKIRMISH_MAX_DISTANCE] || 6))
 		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_SUCCEEDED
 
-	controller.move_away_from(target, 0)
-	return AI_BEHAVIOR_CONTINUE
+	controller.ai_movement.start_moving_away_from(controller, target)
+	return
 
 
 // SUBTREE for kiting/maintaining distance
@@ -481,8 +481,8 @@
 	var/dist = get_dist(owner, target)
 
 	if(dist > prox_distance)
-		controller.move_towards(target, 0)
-		return AI_BEHAVIOR_CONTINUE
+		controller.ai_movement.start_moving_towards(controller, target, prox_distance)
+		return
 	else
 		// In range, perform the action
 		var/datum/ai_behavior/action = new action_behavior_type()
