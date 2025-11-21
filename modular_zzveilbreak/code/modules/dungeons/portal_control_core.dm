@@ -29,9 +29,6 @@
 /obj/machinery/computer/portal_control/proc/delayed_linkup()
 	try_to_linkup()
 
-/obj/machinery/computer/portal_control/CanAllowThrough(atom/movable/mover, border_dir)
-	return TRUE
-
 /obj/machinery/computer/portal_control/can_interact(mob/user)
 	if(!user)
 		return FALSE

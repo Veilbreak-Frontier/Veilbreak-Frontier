@@ -789,9 +789,7 @@
 	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/disposal/bin,
-/obj/structure/disposalpipe/trunk{
-	dir = 4
-	},
+/obj/structure/disposalpipe/trunk,
 /turf/open/floor/engine{
 	icon_state = "dark_small"
 	},
@@ -4997,6 +4995,14 @@
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/port)
+"euf" = (
+/obj/structure/disposalpipe/segment{
+	dir = 5
+	},
+/turf/open/floor/engine{
+	icon_state = "dark_small"
+	},
+/area/station/science/xenobiology)
 "euI" = (
 /turf/open/floor/iron/dark/side{
 	dir = 10
@@ -8037,6 +8043,9 @@
 	pixel_x = -6;
 	pixel_y = 3
 	},
+/obj/structure/disposalpipe/segment{
+	dir = 9
+	},
 /turf/open/floor/engine{
 	icon_state = "dark_small"
 	},
@@ -8984,10 +8993,8 @@
 /turf/open/floor/iron/white,
 /area/station/medical/medbay/central)
 "ifp" = (
-/mob/living/basic/slime{
-	name = "rob"
-	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/mob/living/basic/slime,
 /turf/open/floor/engine,
 /area/station/science/xenobiology)
 "ifv" = (
@@ -15467,17 +15474,15 @@
 /turf/open/floor/iron/dark,
 /area/station/science/robotics/mechbay)
 "nVt" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2{
-	dir = 8
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
+/obj/machinery/door/poddoor/preopen{
+	id = "xenobiomain";
+	name = "Containment Blast Door"
 	},
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/disposal/bin,
-/obj/structure/disposalpipe/trunk{
-	dir = 8
+/obj/structure/disposalpipe/segment{
+	dir = 4
 	},
-/turf/open/floor/engine{
-	icon_state = "dark_small"
-	},
+/turf/open/floor/engine,
 /area/station/science/xenobiology)
 "nVF" = (
 /obj/effect/turf_decal/box/white/corners{
@@ -16903,6 +16908,7 @@
 	dir = 8
 	},
 /obj/machinery/light/floor,
+/obj/structure/disposalpipe/segment,
 /turf/open/floor/engine{
 	icon_state = "dark_small"
 	},
@@ -18819,6 +18825,9 @@
 	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2{
 	dir = 8
+	},
+/obj/structure/disposalpipe/segment{
+	dir = 4
 	},
 /turf/open/floor/engine,
 /area/station/science/xenobiology)
@@ -21604,6 +21613,16 @@
 /obj/machinery/telecomms/bus/preset_four,
 /turf/open/floor/iron/dark,
 /area/station/tcommsat/server)
+"tcr" = (
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2{
+	dir = 8
+	},
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/structure/disposalpipe/segment,
+/turf/open/floor/engine{
+	icon_state = "dark_small"
+	},
+/area/station/science/xenobiology)
 "tcz" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2{
@@ -26909,6 +26928,7 @@
 	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/light/floor,
+/obj/structure/disposalpipe/segment,
 /turf/open/floor/engine{
 	icon_state = "dark_small"
 	},
@@ -69621,7 +69641,7 @@ cpk
 sxl
 jwi
 tKa
-cKY
+nVt
 jwi
 jwi
 xDQ
@@ -69875,9 +69895,9 @@ lTH
 anH
 bJP
 xgs
-nVt
+aLQ
 pbY
-vrs
+tcr
 hgW
 jMX
 jwi
@@ -70905,8 +70925,8 @@ dAU
 xgs
 aLQ
 xEr
-vrs
-xgs
+tcr
+euf
 qxl
 jwi
 jCC
@@ -71163,7 +71183,7 @@ cpk
 sxl
 jwi
 tKa
-cKY
+nVt
 jwi
 jwi
 xDQ
@@ -71416,7 +71436,7 @@ ont
 hZi
 cKY
 ont
-uEd
+gQC
 hZi
 cKY
 gQI
@@ -71673,7 +71693,7 @@ cNi
 ifp
 cKY
 cNi
-gQC
+uEd
 ofK
 cKY
 tiB
