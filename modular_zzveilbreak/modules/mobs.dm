@@ -245,8 +245,8 @@
 	blackboard = list(
 		BB_TARGETING_STRATEGY = /datum/targeting_strategy/basic/void_aggressive,
 		BB_VOID_SUMMON_COOLDOWN = 0,
-		BB_MAINTAIN_DISTANCE_MIN = 4, // Keep at least 4 tiles away
-		BB_MAINTAIN_DISTANCE_MAX = 6, // But no more than 6 tiles
+		BB_RANGED_SKIRMISH_MIN_DISTANCE = 4, // Keep at least 4 tiles away
+		BB_RANGED_SKIRMISH_MAX_DISTANCE = 6, // But no more than 6 tiles
 	)
 
 	ai_movement = /datum/ai_movement/basic_avoidance
@@ -415,6 +415,24 @@
 	controller.move_towards(target, 0)
 	return AI_BEHAVIOR_CONTINUE
 
+// BEHAVIOR for fleeing from a target
+/datum/ai_behavior/flee_from_target
+	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT
+
+/datum/ai_behavior/flee_from_target/perform(seconds_per_tick, datum/ai_controller/controller, target_key)
+	var/atom/movable/target = controller.blackboard[target_key]
+	if(!target)
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
+
+	var/mob/living/owner = controller.pawn
+	// We can stop fleeing if we are far enough away
+	if(get_dist(owner, target) > (controller.blackboard[BB_RANGED_SKIRMISH_MAX_DISTANCE] || 6))
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_SUCCEEDED
+
+	controller.move_away_from(target, 0)
+	return AI_BEHAVIOR_CONTINUE
+
+
 // SUBTREE for kiting/maintaining distance
 /datum/ai_planning_subtree/maintain_distance_from_target
 /datum/ai_planning_subtree/maintain_distance_from_target/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
@@ -425,14 +443,13 @@
 	var/mob/living/owner = controller.pawn
 	var/dist = get_dist(owner, target)
 
-	var/min_dist = controller.blackboard[BB_MAINTAIN_DISTANCE_MIN] || 4
-	var/max_dist = controller.blackboard[BB_MAINTAIN_DISTANCE_MAX] || 6
+	var/min_dist = controller.blackboard[BB_RANGED_SKIRMISH_MIN_DISTANCE] || 4
+	var/max_dist = controller.blackboard[BB_RANGED_SKIRMISH_MAX_DISTANCE] || 6
 
 	// Too close, back away
 	if(dist < min_dist)
-		// Re-use the existing flee logic
-		var/datum/ai_planning_subtree/flee_target/flee_subtree = new()
-		return flee_subtree.SelectBehaviors(controller, seconds_per_tick)
+		controller.queue_behavior(/datum/ai_behavior/flee_from_target, BB_BASIC_MOB_CURRENT_TARGET)
+		return SUBTREE_RETURN_FINISH_PLANNING
 
 	// Too far, move closer
 	if(dist > max_dist)
