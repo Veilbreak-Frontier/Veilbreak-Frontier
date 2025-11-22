@@ -713,7 +713,7 @@ SUBSYSTEM_DEF(gamemode)
 	min_pop_thresholds[EVENT_TRACK_CREWSET] = CONFIG_GET(number/crewset_min_pop)
 	min_pop_thresholds[EVENT_TRACK_GHOSTSET] = CONFIG_GET(number/ghostset_min_pop)
 
-/datum/controller/subsystem/gamemode/proc/storyteller_vote_choices()
+/datum/controller/subsystem/gamemode/proc/storyteller_vote_choices(display_message = FALSE)
 	var/client_amount = GLOB.clients.len
 	var/list/choices = list()
 	var/list/vote_message = list()
@@ -731,8 +731,9 @@ SUBSYSTEM_DEF(gamemode)
 		vote_message += "<b>[storyboy.name]</b>"
 		vote_message += "[storyboy.desc]"
 		vote_message += ""
-	var/finalized_message = "[vote_message.Join("\n")]"
-	to_chat(world, vote_font(fieldset_block("Storyteller Vote", "[finalized_message]", "boxed_message purple_box")))
+	if(display_message && length(vote_message))
+		var/finalized_message = "[vote_message.Join("\n")]"
+		to_chat(world, vote_font(fieldset_block("Storyteller Vote", "[finalized_message]", "boxed_message purple_box")))
 	return choices
 
 /datum/controller/subsystem/gamemode/proc/storyteller_vote_result(winner_name)

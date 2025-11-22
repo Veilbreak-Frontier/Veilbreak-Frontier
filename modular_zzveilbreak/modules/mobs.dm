@@ -1,14 +1,9 @@
 // modular_zzveilbreak/code/modules/mobs/void_mobs.dm
 
 // Define constants first
-#define HARD_CRIT 2
 #define BB_VOID_SUMMON_COOLDOWN "void_summon_cooldown"
 #define BB_VOID_HEAL_COOLDOWN "void_heal_cooldown"
 #define BB_VOID_TAUNT_COOLDOWN "void_taunt_cooldown"
-
-// Define faction constants
-#define FACTION_VOID "void"
-#define FACTION_STATION "station"
 
 // Base void mob type with proper AI integration
 /mob/living/basic/void_creature
@@ -97,7 +92,6 @@
 	icon = 'modular_zzveilbreak/icons/mob/mobs.dmi'
 	icon_state = "consumed"
 	icon_living = "consumed"
-	icon_dead = "consumed_dead"
 	maxHealth = 80
 	health = 80
 	melee_damage_lower = 5
@@ -204,19 +198,22 @@
 	name = "void bolt"
 	icon = 'modular_zzveilbreak/icons/item_icons/voidring.dmi'
 	icon_state = "voidbolt"
-	damage = 25
+	damage = 5
 	damage_type = BURN
 	range = 14
 	speed = 0.3
 	hitsound = 'sound/effects/magic/magic_missile.ogg'
 	hitsound_wall = 'sound/effects/magic/magic_missile.ogg'
 
-/obj/projectile/magic/voidbolt/on_hit(atom/target, blocked = FALSE)
+/obj/projectile/magic/voidbolt/on_hit(atom/target, blocked = 0, pierce_hit)
 	. = ..()
-	if(iscarbon(target) && !blocked)
-		var/mob/living/carbon/C = target
-		C.adjust_stutter(4 SECONDS)
-	return TRUE
+	if(isliving(target) && blocked < 100)
+		var/mob/living/L = target
+		L.apply_damage(damage, damage_type, blocked = blocked, attacking_item = src)
+		if(iscarbon(L))
+			var/mob/living/carbon/C = L
+			C.adjust_stutter(4 SECONDS)
+	return .
 
 // AI CONTROLLERS AND BEHAVIORS
 
